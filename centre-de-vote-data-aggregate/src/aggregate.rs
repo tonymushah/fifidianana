@@ -8,4 +8,4 @@ pub use centre_vote::*;
 pub use fokotany::*;
 pub use commune::*;
 pub use district::*;
-pub use region::Regions;
+pub use region::*;

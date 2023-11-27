@@ -3,6 +3,7 @@ mod centre_de_vote_item;
 mod read_data;
 mod aggregate;
 mod bureau_vote;
+pub mod db;
 
 pub use centre_de_vote_item::CentreVoteDataItem;
 pub use self::error::{Error, Result};
