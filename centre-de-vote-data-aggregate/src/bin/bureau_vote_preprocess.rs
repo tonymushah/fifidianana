@@ -26,6 +26,17 @@ fn preprocess(output: PathBuf, input: PathBuf) -> io::Result<()> {
             let mut writer = BufWriter::new(File::create(output_)?);
             reader.flatten().enumerate().for_each(|(line, text)| {
                 if line > 2 && line < 57 {
+                    let text = {
+                        if let Some(d) = text.find(' ') {
+                            if d == 0 {
+                                text.replacen(' ', "", 1)
+                            }else{
+                                text
+                            }
+                        } else {
+                            text
+                        }
+                    };
                     let text = text.replace("150 elus", "");
                     //let text = text.replace("FTT", "FTT\n");
                     let text = text.replace("MMM", "MMM\n");
@@ -96,17 +107,17 @@ fn to_csv(input: PathBuf, output: PathBuf) -> io::Result<()> {
             //let mut seq = 1;
             if let Ok(()) = writeln!(&mut writer, "numero;nom;partie;nombre;pourcentage") {
                 reader.flatten().enumerate().for_each(|(line, text)| {
-                if (line + 1) % 4 == 0 {
-                    let text: String = text.replace(' ', ";");
-                    if let Some(e) = writeln!(&mut writer, "{text}").err() {
+                    if (line + 1) % 4 == 0 {
+                        let text: String = text.replace(' ', ";");
+                        if let Some(e) = writeln!(&mut writer, "{text}").err() {
+                            eprintln!("{}", e);
+                        }
+                    } else if let Some(e) = write!(&mut writer, "{text};").err() {
                         eprintln!("{}", e);
                     }
-                } else if let Some(e) = write!(&mut writer, "{text};").err() {
-                    eprintln!("{}", e);
-                }
-            });
+                });
             }
-            
+
             Ok(())
         };
         if let Err(e) = res() {
